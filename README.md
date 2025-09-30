@@ -1,18 +1,38 @@
-## Getting Started
+# Sistema de Estoque em Java
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+Um sistema simples de controle de estoque desenvolvido em Java. Permite cadastrar produtos, listar o estoque, vender produtos e atualizar informações, tudo via console. Ideal para aprendizado de programação orientada a objetos (POO) e manipulação de coleções em Java.
 
-## Folder Structure
+---
 
-The workspace contains two folders by default, where:
+## Funcionalidades
 
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
+- Adicionar novos produtos ao estoque  
+- Listar todos os produtos cadastrados  
+- Vender produtos com verificação de quantidade em estoque  
+- Atualizar preço ou quantidade de produtos (via métodos na classe Produto)  
+- Menu interativo no console  
 
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
+---
 
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
+## Tecnologias
 
-## Dependency Management
+- Java SE  
+- Coleções (`ArrayList`)  
+- Programação Orientada a Objetos (POO)  
+- Scanner para interação com o usuário  
 
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+---
+
+## Estrutura do Projeto
+
+- `App.java` → Classe principal com o menu interativo  
+- `Estoque.java` → Classe que gerencia a lista de produtos  
+- `Produto.java` → Classe que representa um produto (nome, preço, quantidade, SKU)  
+
+---
+
+## Como Executar
+
+1. Clone este repositório:
+```bash
+git clone https://github.com/SEU_USUARIO/NOME_DO_REPOSITORIO.git
