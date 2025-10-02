@@ -35,4 +35,4 @@ Um sistema simples de controle de estoque desenvolvido em Java. Permite cadastra
 
 1. Clone este repositório:
 ```bash
-git clone https://github.com/SEU_USUARIO/NOME_DO_REPOSITORIO.git
+git clone https://github.com/Samuel-Devx/Sistema-estoque
