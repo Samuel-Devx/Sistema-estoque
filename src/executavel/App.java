@@ -1,9 +1,12 @@
+package executavel;
+import com.logisticlife.estoque.model.Produto;
+import com.logisticlife.estoque.model.Estoque;
 import java.util.Scanner;
 
 public class App {
     public static void main(String[] args) {
         Scanner teclado = new Scanner(System.in);
-        Estoque estoque = new Estoque();    
+        Estoque estoque = new Estoque();
         int op;
        
         do {
@@ -11,7 +14,8 @@ public class App {
             System.out.println("1 - Adicionar produto");
             System.out.println("2 - Mostrar estoque");
             System.out.println("3 - Vender produto");
-            System.out.println("4 - Sair");
+            System.out.println("4 - Controle de vendas");
+            System.out.println("5 - Encerrar");
             System.out.print("Escolha uma opção: ");
           
             op = teclado.nextInt();
@@ -20,7 +24,7 @@ public class App {
             switch (op) {
                 case 1:
                     // Adicionar produto
-                    System.out.println("\n--- Cadastro de Produto ---");
+                    System.out.println("\n--- Cadastro Produto---");
                     System.out.print("Nome: ");
                     String nome = teclado.nextLine();
 
@@ -41,7 +45,7 @@ public class App {
 
                 case 2:
                     // Mostrar estoque
-                    System.out.println("\n--- Estoque Atual ---");
+                    System.out.println("\n---Estoque Atual ---");
                     estoque.mostrarEstoque();
                     break;
 
@@ -55,17 +59,18 @@ public class App {
 
                     estoque.venderProduto(nomesString, qtd);
                     break;
-
                 case 4:
+                    estoque.controleVendas();
+                    break;
+                case 5:
                     // Sair
                     System.out.println("Saindo...");
                     break;
-
                 default:
                     System.out.println("Opção inválida!");
                     break;
             }
-        } while (op != 4); 
+        } while (op != 5);
         
         teclado.close();
     }

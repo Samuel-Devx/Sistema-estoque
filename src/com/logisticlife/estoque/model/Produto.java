@@ -1,3 +1,4 @@
+package com.logisticlife.estoque.model;
 
 public class Produto {
     //Atributos 
@@ -5,6 +6,7 @@ public class Produto {
     private double preco;
     private int quantidade;
     private final int SKU;
+    public int totalAdicionados = 0;
     //Construtor
 
     public Produto(String nome, double preco, int quantidade, int SKU) {
@@ -42,8 +44,12 @@ public class Produto {
 
     }
 
+
+
+
     //Métodos
     public void adiocionarEstoque(int quantidade) {
+        this.totalAdicionados += quantidade;
         this.quantidade += quantidade;
     }
     public void mudarPreco (double preco) {
@@ -57,14 +63,15 @@ public class Produto {
             System.out.println("Quantidade insuficiente em estoque.");
         }
     }
-    @Override
-    public String toString() {
-        return "SKU: " + SKU +
-            " | Nome: " + nome +
-            " | Preço: R$ " + preco +
-            " | Quantidade: " + quantidade;
-    }
 
+
+@Override
+    public String toString() {
+        return "Nome: " + nome +
+            " | Quantidade: " + quantidade+
+            " | SKU: " + SKU +
+            " | Preço: R$ " + preco ;
+    }
 
     
     
