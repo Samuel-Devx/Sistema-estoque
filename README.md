@@ -25,7 +25,7 @@ Um sistema simples de controle de estoque desenvolvido em Java. Permite cadastra
 
 ## Estrutura do Projeto
 
-- `executavel.App.java` → Classe principal com o menu interativo  
+- `com.logisticlife.estoque.executavel.App.java` → Classe principal com o menu interativo  
 - `com.logisticlife.estoque.model.Estoque.java` → Classe que gerencia a lista de produtos  
 - `com.logisticlife.estoque.model.Produto.java` → Classe que representa um produto (nome, preço, quantidade, SKU)  
 

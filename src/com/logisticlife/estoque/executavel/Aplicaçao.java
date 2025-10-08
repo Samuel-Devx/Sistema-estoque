@@ -1,4 +1,4 @@
-package executavel;
+package com.logisticlife.estoque.executavel;
 
 import com.logisticlife.estoque.model.Estoque;
 import com.logisticlife.estoque.model.Produto;
