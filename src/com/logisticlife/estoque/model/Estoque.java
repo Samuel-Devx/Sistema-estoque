@@ -5,6 +5,7 @@ import java.util.ArrayList;
 public class Estoque {
     //Atributos
     private ArrayList<Produto> produtos = new ArrayList<>();
+    private ArrayList<Produto> produtosVendidos = new ArrayList<>();
     private double percentualVendas;
     private int totalVendas = 0;
     public int totalAdicionados = 0;
@@ -30,8 +31,11 @@ public class Estoque {
             if (p.getQuantidade() >= quantidade) {
                 p.setQuantidade(p.getQuantidade() - quantidade);
                 this.totalVendas += quantidade;
-
                 System.out.println("Venda realizada com sucesso!");
+            if (p.getQuantidade() == 0){
+                produtos.remove(p);
+                produtosVendidos.add(p);
+            }
             } else {
                 System.out.println("Quantidade insuficiente em estoque.");
             }
@@ -61,7 +65,12 @@ public class Estoque {
         }
     }
 
-
+    //Mostrar os produtos 100% vendidos
+    public void mostrarVendidos() {
+        for (Produto p : produtosVendidos) {
+            System.out.println(p);
+        }
+    }
 
 
 }

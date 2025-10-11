@@ -15,7 +15,8 @@ public class App {
             System.out.println("2 - Mostrar estoque");
             System.out.println("3 - Vender produto");
             System.out.println("4 - Controle de vendas");
-            System.out.println("5 - Encerrar");
+            System.out.println("5 - Conferir 100% Vendidos");
+            System.out.println("6 - Encerrar");
             System.out.print("Escolha uma opção: ");
           
             op = teclado.nextInt();
@@ -63,6 +64,10 @@ public class App {
                     estoque.controleVendas();
                     break;
                 case 5:
+                    System.out.println("\n---Estoque 100% Vendido ---");
+                    estoque.mostrarVendidos();
+                    break;
+                case 6:
                     // Sair
                     System.out.println("Saindo...");
                     break;
@@ -70,7 +75,7 @@ public class App {
                     System.out.println("Opção inválida!");
                     break;
             }
-        } while (op != 5);
+        } while (op != 6);
         
         teclado.close();
     }
