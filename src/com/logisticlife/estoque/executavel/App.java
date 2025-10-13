@@ -1,6 +1,12 @@
 package com.logisticlife.estoque.executavel;
 import com.logisticlife.estoque.model.Produto;
 import com.logisticlife.estoque.model.Estoque;
+import com.logisticlife.estoque.mysqlconector.ConectorMySql;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.SQLOutput;
 import java.util.Scanner;
 
 public class App {
@@ -12,11 +18,12 @@ public class App {
         do {
             System.out.println("\n===== MENU =====");
             System.out.println("1 - Adicionar produto");
-            System.out.println("2 - Mostrar estoque");
-            System.out.println("3 - Vender produto");
-            System.out.println("4 - Controle de vendas");
-            System.out.println("5 - Conferir 100% Vendidos");
-            System.out.println("6 - Encerrar");
+            System.out.println("2 - Deletar produto");
+            System.out.println("3 - Mostrar estoque");
+            System.out.println("4 - Vender produto");
+            System.out.println("5 - Controle de vendas");
+            System.out.println("6 - Conferir 100% Vendidos");
+            System.out.println("7 - Encerrar");
             System.out.print("Escolha uma opção: ");
           
             op = teclado.nextInt();
@@ -38,19 +45,48 @@ public class App {
 
                     System.out.print("SKU: ");
                     int SKU = teclado.nextInt();
+                    String skuStrin = String.valueOf(SKU);
+                    if (skuStrin.length() < 8){
+                        System.out.println("O SKU deve ter pelo menos 8 Digitos!");
+                        break;
+                    }
+                    else {
+                        Produto produto = new Produto(nome, preco, quantidade, SKU);
+                        estoque.adicionarProduto(produto);
+                        System.out.println("Produto adicionado com sucesso!");
+                        //---------------------Conexão com my Sql------------------------
+                        String sql = "INSERT INTO produtos (nome, preco, quantidade, SKU) VALUES (? , ?, ?, ?)";
+                        try (Connection coon = ConectorMySql.getConexao();
+                             PreparedStatement smtm = coon.prepareStatement(sql)) {
+                            smtm.setString(1, nome);
+                            smtm.setDouble(2, preco);
+                            smtm.setInt(3, quantidade);
+                            smtm.setInt(4, SKU);
+                            int linhasAfetadas = smtm.executeUpdate();
+                            if (linhasAfetadas > 0) {
+                                System.out.println("Produto adionado no Banco de dados");
+                            }
+                        } catch (SQLException e) {
+                            System.out.println("Erro ao conectar " + e.getMessage());
+                        }
 
-                    Produto produto = new Produto(nome, preco, quantidade, SKU);
-                    estoque.adicionarProduto(produto);
-                    System.out.println("Produto adicionado com sucesso!");
-                    break;
 
-                case 2:
-                    // Mostrar estoque
-                    System.out.println("\n---Estoque Atual ---");
-                    estoque.mostrarEstoque();
+
+                    }
                     break;
+                case 2: {
+                    // Deletando Dados
+                    System.out.print("Qual o nome do produto que deseja deletar: ");
+                    String nomeProduto = teclado.next();
+                    estoque.deletarDados(nomeProduto);
+                }
 
                 case 3:
+                    // Mostrar estoque
+                    estoque.mostraEstoqueBanco();
+                    break;
+
+                case 4:
                     // Vender produto
                     System.out.print("Digite o nome do produto: ");
                     String nomesString = teclado.next();
@@ -60,14 +96,14 @@ public class App {
 
                     estoque.venderProduto(nomesString, qtd);
                     break;
-                case 4:
+                case 5:
                     estoque.controleVendas();
                     break;
-                case 5:
+                case 6:
                     System.out.println("\n---Estoque 100% Vendido ---");
                     estoque.mostrarVendidos();
                     break;
-                case 6:
+                case 7:
                     // Sair
                     System.out.println("Saindo...");
                     break;
@@ -75,7 +111,7 @@ public class App {
                     System.out.println("Opção inválida!");
                     break;
             }
-        } while (op != 6);
+        } while (op != 7);
         
         teclado.close();
     }

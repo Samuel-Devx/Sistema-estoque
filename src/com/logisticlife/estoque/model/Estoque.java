@@ -1,5 +1,11 @@
 package com.logisticlife.estoque.model;
 import com.logisticlife.estoque.model.Produto;
+import com.logisticlife.estoque.mysqlconector.ConectorMySql;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 public class Estoque {
@@ -30,6 +36,7 @@ public class Estoque {
         if (p.getNome().equalsIgnoreCase(nome)) {
             if (p.getQuantidade() >= quantidade) {
                 p.setQuantidade(p.getQuantidade() - quantidade);
+                atualizarProdutoBanco(p);
                 this.totalVendas += quantidade;
                 System.out.println("Venda realizada com sucesso!");
             if (p.getQuantidade() == 0){
@@ -71,6 +78,83 @@ public class Estoque {
             System.out.println(p);
         }
     }
+    //Atulizar quantidade dentro do banco de dados
+    private void atualizarProdutoBanco (Produto p){
+        String sql = "UPDATE produtos SET quantidade = ?  WHERE nome = ?";
+
+        try(Connection conn = ConectorMySql.getConexao();
+            PreparedStatement smtm = conn.prepareStatement(sql)) {
+
+            smtm.setInt(1, p.getQuantidade());
+            smtm.setString(2, p.getNome());
+
+            int linhasAfetadas = smtm.executeUpdate();
+
+            if (linhasAfetadas > 0){
+                System.out.println("Produto atulizado no Banco de dados");
+            }
+            else {
+                System.out.println("Produto não encontrado");
+            }
+        } catch (SQLException e) {
+            System.out.println("ERRO na atualização " + e.getMessage());
+        }
+
+
+    }
+    //-------Delete um dado da tabela
+    public void deletarDados (String nome){
+        String sql = "DELETE FROM produtos WHERE nome = ?";
+        try (Connection conn = ConectorMySql.getConexao();
+            PreparedStatement smtm = conn.prepareStatement(sql)){
+
+            smtm.setString(1, nome);
+            int linhasAfetadas = smtm.executeUpdate();
+
+            if(linhasAfetadas > 0){
+                System.out.printf("%n Produto %s deletado do banco de dados", nome);
+            }
+            else {
+                System.out.println("Produto não encontrado!");
+            }
+        } catch (SQLException e) {
+
+            System.out.println("ERRO em deletar o dado " + e.getMessage());
+        }
+    }
+
+    //--------Mostrando produtos select
+    public void mostraEstoqueBanco() {
+        String sql = "SELECT * FROM produtos";
+        try(Connection conn = ConectorMySql.getConexao();
+            PreparedStatement smtm = conn.prepareStatement(sql);
+            ResultSet rs = smtm.executeQuery();){
+
+            System.out.println("\n--- Lista de Produtos ---");
+            while (rs.next()){
+                int id = rs.getInt("id");
+                String nome = rs.getString("nome");
+                double preco = rs.getDouble("preco");
+                int quantidade = rs.getInt("quantidade");
+                int sku = rs.getInt("SKU");
+
+                System.out.println("ID: " + id +
+                                    "| Nome: " + nome +
+                                    "| Quantidade: " + quantidade +
+                                    "| SKU: " + sku +
+                                    "| Preço: R$" + preco);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("ERRO em buscar banco de dados " + e.getMessage());
+        }
+    }
+
+
+
+
+
+
 
 
 }
