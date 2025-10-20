@@ -3,7 +3,7 @@ package com.logisticlife.estoque.executavel;
 import com.logisticlife.estoque.model.Estoque;
 import com.logisticlife.estoque.model.Produto;
 
-public class Aplicaçao {
+public class  Aplicaçao {
     public static void main(String[] args) throws Exception {
         //Cadastro de produtos
         Estoque estoque = new Estoque();

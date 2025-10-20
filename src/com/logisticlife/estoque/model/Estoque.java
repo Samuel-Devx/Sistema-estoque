@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Estoque {
     //Atributos
@@ -15,6 +16,10 @@ public class Estoque {
     private double percentualVendas;
     private int totalVendas = 0;
     public int totalAdicionados = 0;
+
+    public Estoque() throws SQLException {
+    }
+
     //adicionar produtos ao estoque
     public void adicionarProduto(Produto p) {
         totalAdicionados += p.getQuantidade();
@@ -38,10 +43,14 @@ public class Estoque {
                 p.setQuantidade(p.getQuantidade() - quantidade);
                 atualizarProdutoBanco(p);
                 this.totalVendas += quantidade;
+                atualizarVendas(p, quantidade);
                 System.out.println("Venda realizada com sucesso!");
+
             if (p.getQuantidade() == 0){
-                produtos.remove(p);
-                produtosVendidos.add(p);
+                Produto vendido = new Produto(p.getNome(), p.getPreco(), 1, p.getSKU());
+                atualizarVendas(p, quantidade);
+                deletarDados(vendido.getNome());
+
             }
             } else {
                 System.out.println("Quantidade insuficiente em estoque.");
@@ -148,6 +157,99 @@ public class Estoque {
         } catch (SQLException e) {
             System.out.println("ERRO em buscar banco de dados " + e.getMessage());
         }
+    }
+
+
+    //Add tabela 100% vendidos
+   public void atualizarVendas (Produto p, int quantidade){
+       String sql = "INSERT INTO vendas (nome, preco, quantidade, SKU) VALUES (? , ?, ?, ?)";
+       try (Connection coon = ConectorMySql.getConexao();
+
+            PreparedStatement smtm = coon.prepareStatement(sql)) {
+           smtm.setString(1, p.getNome());
+           smtm.setDouble(2, p.getPreco());
+           smtm.setInt(3, quantidade);
+           smtm.setInt(4, p.getSKU());
+           int linhasAfetadas = smtm.executeUpdate();
+           if (linhasAfetadas > 0) {
+               System.out.println("Produto adionado no Banco de dados");
+           }
+       } catch (SQLException e) {
+           System.out.println("Erro ao conectar " + e.getMessage());
+       }
+   }
+    //tabela vendas
+    public void exibirTabelaVendas (){
+        String sql = "SELECT * FROM vendas";
+        try(Connection conn = ConectorMySql.getConexao();
+            PreparedStatement smtm = conn.prepareStatement(sql);
+            ResultSet rs = smtm.executeQuery();){
+
+            System.out.println("\n--- Lista de Produtos ---");
+            while (rs.next()){
+                int id = rs.getInt("id");
+                String nome = rs.getString("nome");
+                double preco = rs.getDouble("preco");
+                int quantidade = rs.getInt("quantidade");
+                int sku = rs.getInt("SKU");
+                String data = rs.getString("data_venda");
+                System.out.println("ID: " + id +
+                        "| Nome: " + nome +
+                        "| Quantidade: " + quantidade +
+                        "| SKU: " + sku +
+                        "| Preço: R$" + preco +
+                        "| Data da venda: " + data );
+            }
+
+        } catch (SQLException e) {
+            System.out.println("ERRO em buscar banco de dados " + e.getMessage());
+        }
+    }
+    public double percentualDeVendas(){
+        String sqlTotalEstoque = "SELECT SUM(quantidade) AS total FROM produtos";
+        String sqlTotalVendido = "SELECT SUM(quantidade) AS total FROM vendas";
+        //Variaveis
+        int totalEstoque = 0;
+        int totalVendido = 0;
+        try (Connection conn = ConectorMySql.getConexao()){
+
+            try(PreparedStatement smt = conn.prepareStatement(sqlTotalEstoque);
+                ResultSet rs = smt.executeQuery())     {
+                //esse result set é para pegarmos os dados e usamos como variaveis
+                if (rs.next())
+                    totalEstoque =  rs.getInt("total");
+
+            } catch (SQLException e) {
+                System.out.println("ERRO em conseguir um o percentual " + e.getMessage());
+            }
+            try (PreparedStatement smtm = conn.prepareStatement(sqlTotalVendido);
+                ResultSet rsr = smtm.executeQuery()){
+                if(rsr.next()){
+                    totalVendido = rsr.getInt("total");
+                }
+
+
+            }
+        } catch (SQLException e) {
+            System.out.println("ERRO em conseguir um o percentual " + e.getMessage());
+        }
+
+
+        int totalAdicionados = totalEstoque + totalVendido;
+        if (totalAdicionados == 0) return  0;
+        else return  (totalVendido / (double) totalAdicionados) * 100;
+
+        //trabalhei com 2 try pois consultei 2 tabela
+    }
+
+
+    public void exibirControleDeVendas (){
+        double percentual = percentualDeVendas();
+        System.out.printf("==========Controle de vendas=======%n ");
+
+        System.out.printf("Percentual de vendas: %.2f%n", percentual);
+        System.out.printf("===================================");
+
     }
 
 

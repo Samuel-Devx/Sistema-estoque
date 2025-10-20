@@ -10,7 +10,7 @@ import java.sql.SQLOutput;
 import java.util.Scanner;
 
 public class App {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws SQLException {
         Scanner teclado = new Scanner(System.in);
         Estoque estoque = new Estoque();
         int op;
@@ -22,7 +22,7 @@ public class App {
             System.out.println("3 - Mostrar estoque");
             System.out.println("4 - Vender produto");
             System.out.println("5 - Controle de vendas");
-            System.out.println("6 - Conferir 100% Vendidos");
+            System.out.println("6 - Conferir Vendas");
             System.out.println("7 - Encerrar");
             System.out.print("Escolha uma opção: ");
           
@@ -95,13 +95,14 @@ public class App {
                     int qtd = teclado.nextInt();
 
                     estoque.venderProduto(nomesString, qtd);
+
                     break;
                 case 5:
-                    estoque.controleVendas();
+                    estoque.exibirControleDeVendas();
                     break;
                 case 6:
-                    System.out.println("\n---Estoque 100% Vendido ---");
-                    estoque.mostrarVendidos();
+                    System.out.println("\n---Tabela Vendidos---");
+                    estoque.exibirTabelaVendas();
                     break;
                 case 7:
                     // Sair
