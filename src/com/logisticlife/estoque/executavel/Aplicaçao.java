@@ -20,7 +20,7 @@ public class  Aplicaçao {
         //Mostrando estoque
         estoque.mostrarEstoque();
         //Vendendo produtos
-        estoque.venderProduto("Shapoo", 10);
+
         
         //Atualizando estoque e preço
         estoque.adicionarProduto(produto2);

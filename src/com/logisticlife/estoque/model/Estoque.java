@@ -1,6 +1,7 @@
 package com.logisticlife.estoque.model;
 import com.logisticlife.estoque.model.Produto;
 import com.logisticlife.estoque.mysqlconector.ConectorMySql;
+import com.sun.source.tree.WhileLoopTree;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -41,7 +42,6 @@ public class Estoque {
         if (p.getNome().equalsIgnoreCase(nome)) {
             if (p.getQuantidade() >= quantidade) {
                 p.setQuantidade(p.getQuantidade() - quantidade);
-                atualizarProdutoBanco(p);
                 this.totalVendas += quantidade;
                 atualizarVendas(p, quantidade);
                 System.out.println("Venda realizada com sucesso!");
@@ -88,23 +88,21 @@ public class Estoque {
         }
     }
     //Atulizar quantidade dentro do banco de dados
-    private void atualizarProdutoBanco (Produto p){
+    public void atualizarProdutoBanco(String nome, int quantidade){
         String sql = "UPDATE produtos SET quantidade = ?  WHERE nome = ?";
 
         try(Connection conn = ConectorMySql.getConexao();
             PreparedStatement smtm = conn.prepareStatement(sql)) {
 
-            smtm.setInt(1, p.getQuantidade());
-            smtm.setString(2, p.getNome());
+            smtm.setInt(1, quantidade);
+            smtm.setString(2, nome);
 
             int linhasAfetadas = smtm.executeUpdate();
 
             if (linhasAfetadas > 0){
                 System.out.println("Produto atulizado no Banco de dados");
             }
-            else {
-                System.out.println("Produto não encontrado");
-            }
+
         } catch (SQLException e) {
             System.out.println("ERRO na atualização " + e.getMessage());
         }
@@ -252,11 +250,34 @@ public class Estoque {
 
     }
 
+    public void pesquisaPorSku(int skuPesquisa){
+        String sql = "SELECT * from produtos WHERE SKU = ? ";
+        try (Connection coon = ConectorMySql.getConexao();
+            PreparedStatement stmt = coon.prepareStatement(sql);) {
+                stmt.setInt(1, skuPesquisa);
+
+        try (ResultSet rs = stmt.executeQuery()){
+            while (rs.next()) {
+                int id = rs.getInt("id");
+                String nome = rs.getString("nome");
+                double preco = rs.getDouble("preco");
+                int quantidade = rs.getInt("quantidade");
+                int sku = rs.getInt("SKU");
+                System.out.println("ID: " + id +
+                        "| Nome: " + nome +
+                        "| Quantidade: " + quantidade +
+                        "| SKU: " + sku +
+                        "| Preço: R$" + preco );
+
+            }
+
+        }
+            } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        }
 
 
 
-
-
-
+    }
 
 }

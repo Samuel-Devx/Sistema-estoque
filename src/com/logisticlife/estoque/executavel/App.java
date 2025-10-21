@@ -20,10 +20,11 @@ public class App {
             System.out.println("1 - Adicionar produto");
             System.out.println("2 - Deletar produto");
             System.out.println("3 - Mostrar estoque");
-            System.out.println("4 - Vender produto");
-            System.out.println("5 - Controle de vendas");
-            System.out.println("6 - Conferir Vendas");
-            System.out.println("7 - Encerrar");
+            System.out.println("4 - Pesquisar produto");
+            System.out.println("5 - Vender produto");
+            System.out.println("6 - Controle de vendas");
+            System.out.println("7 - Conferir Vendas");
+            System.out.println("8 - Encerrar");
             System.out.print("Escolha uma opção: ");
           
             op = teclado.nextInt();
@@ -85,26 +86,31 @@ public class App {
                     // Mostrar estoque
                     estoque.mostraEstoqueBanco();
                     break;
-
                 case 4:
+                    //pesquisa
+                    System.out.print("Digite o Sku do produto: ");
+                    int skuPesquisa = teclado.nextInt();
+                    estoque.pesquisaPorSku(skuPesquisa);
+                    break;
+                case 5:
                     // Vender produto
                     System.out.print("Digite o nome do produto: ");
                     String nomesString = teclado.next();
 
                     System.out.print("Digite a quantidade a ser vendida: ");
                     int qtd = teclado.nextInt();
-
+                    estoque.atualizarProdutoBanco(nomesString, qtd);
                     estoque.venderProduto(nomesString, qtd);
 
                     break;
-                case 5:
+                case 6:
                     estoque.exibirControleDeVendas();
                     break;
-                case 6:
+                case 7:
                     System.out.println("\n---Tabela Vendidos---");
                     estoque.exibirTabelaVendas();
                     break;
-                case 7:
+                case 8:
                     // Sair
                     System.out.println("Saindo...");
                     break;
@@ -112,7 +118,7 @@ public class App {
                     System.out.println("Opção inválida!");
                     break;
             }
-        } while (op != 7);
+        } while (op != 8);
         
         teclado.close();
     }
